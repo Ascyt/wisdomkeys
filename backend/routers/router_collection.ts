@@ -92,8 +92,15 @@ collectionRouter.put('/:id', async (req, res) => {
   try {
     const collRepo = new CollectionRepository(unit);
     let success: boolean = false;
+    const idInput: number = Number(req.params.id);
+
+    if(!Number(idInput)) {
+      await unit.complete(false);
+      res.status(StatusCodes.BAD_REQUEST).send();
+    }
+
     const collection: Collection = new Collection(
-      req.body.collectionid,
+      idInput,
       req.body.collectionname,
       req.body.avgspeed,
       req.body.bestspeed,
@@ -106,7 +113,7 @@ collectionRouter.put('/:id', async (req, res) => {
 
     if(success) {
       await unit.complete(true);
-      res.status(StatusCodes.NO_CONTENT).json(collection);
+      res.status(StatusCodes.OK).json(collection);
     } else {
       await unit.complete(false);
       res.status(StatusCodes.BAD_REQUEST).send();
