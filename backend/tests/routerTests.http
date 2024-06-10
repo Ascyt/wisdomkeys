@@ -1,0 +1,20 @@
+### Insert User
+POST http://localhost:3000/api/users/
+Content-Type: application/json
+
+{
+  "username": "Schilip Fauer",
+  "password": "QgT"
+}
+
+### Insert Collection
+POST http://localhost:3000/api/collections/
+Content-Type: application/json
+
+{
+  "collectionname": "MyCollection",
+  "avgspeed": null,
+  "bestspeed": null,
+  "raceamount": 0,
+  "userid": 1
+}

@@ -7,8 +7,8 @@ export interface userDB {
 export interface collectionDB {
   collectionid: number,
   collectionname: string,
-  avgspeed: number,
-  bestspeed: number,
+  avgspeed: number | null,
+  bestspeed: number | null,
   raceamount: number,
   userid: number
 }
@@ -28,8 +28,8 @@ export interface userDBInsert {
 
 export interface collectionDBInsert {
   collectionname: string,
-  avgspeed: number,
-  bestspeed: number,
+  avgspeed: number | null,
+  bestspeed: number | null,
   raceamount: number,
   userid: number
 }

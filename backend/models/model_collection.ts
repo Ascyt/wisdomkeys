@@ -3,14 +3,14 @@ import {Entry} from "./model_entry";
 export class Collection {
   private readonly _collectionId: number;
   private _collectionName: string;
-  private _avgSpeed: number;
-  private _bestSpeed: number;
+  private _avgSpeed: number | null;
+  private _bestSpeed: number | null;
   private _raceAmount: number;
   private readonly _userId: number;
   private _entries: Entry[];
 
 
-  constructor(collectionId: number, collectionName: string, avgSpeed: number, bestSpeed: number, raceAmount: number, userId: number, entries: Entry[]) {
+  constructor(collectionId: number, collectionName: string, avgSpeed: number | null, bestSpeed: number | null, raceAmount: number, userId: number, entries: Entry[]) {
     this._collectionId = collectionId;
     this._collectionName = collectionName;
     this._avgSpeed = avgSpeed;
@@ -29,11 +29,11 @@ export class Collection {
     return this._collectionName;
   }
 
-  get avgSpeed(): number {
+  get avgSpeed(): number | null {
     return this._avgSpeed;
   }
 
-  get bestSpeed(): number {
+  get bestSpeed(): number | null {
     return this._bestSpeed;
   }
 
@@ -54,11 +54,11 @@ export class Collection {
     this._collectionName = value;
   }
 
-  set avgSpeed(value: number) {
+  set avgSpeed(value: number | null) {
     this._avgSpeed = value;
   }
 
-  set bestSpeed(value: number) {
+  set bestSpeed(value: number | null) {
     this._bestSpeed = value;
   }
 

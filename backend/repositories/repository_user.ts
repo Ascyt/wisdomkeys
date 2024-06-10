@@ -1,7 +1,7 @@
 import {User} from "../models/model_user";
 import {Unit} from "../database/unit";
 import {RepositoryBase} from "./repository_base";
-import {userDB} from "../models/model_db";
+import {userDB, userDBInsert} from "../models/model_db";
 import {Collection} from "../models/model_collection";
 import {CollectionRepository} from "./repository_collection";
 
@@ -20,7 +20,7 @@ export class UserRepository extends RepositoryBase {
     return await this.executeStmt(stmt);
   }
 
-  public async insertUser(user: User): Promise<boolean> {
+  public async insertUser(user: userDBInsert): Promise<boolean> {
     const stmt = await this.unit.prepare('INSERT INTO wk_user (username, password) VALUES (?1, ?2)', {
       1: user.username,
       2: user.password

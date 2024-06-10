@@ -42,8 +42,8 @@ export class DB {
       `CREATE TABLE IF NOT EXISTS "wk_collection" (
             collectionid integer NOT NULL PRIMARY KEY AUTOINCREMENT,
             collectionname text NOT NULL,
-            avgspeed double,
-            bestspeed double,
+            avgspeed real,
+            bestspeed real,
             raceAmount integer NOT NULL,
             userid integer NOT NULL,
             CONSTRAINT fk_collection_user FOREIGN KEY (userid) REFERENCES "wk_user" (userid) ON DELETE CASCADE
