@@ -1,23 +1,23 @@
 export interface userDB {
-  userId: number,
+  userid: number,
   username: string,
   password: string
 }
 
 export interface collectionDB {
-  collectionId: number,
-  collectionName: string,
-  avgSpeed: number,
-  bestSpeed: number,
-  raceAmount: number,
-  userId: number
+  collectionid: number,
+  collectionname: string,
+  avgspeed: number,
+  bestspeed: number,
+  raceamount: number,
+  userid: number
 }
 
 export interface entryDB {
-  entryId: number,
+  entryid: number,
   word: string,
   answer: string,
-  collectionId: number
+  collectionid: number
 }
 
 
@@ -27,15 +27,15 @@ export interface userDBInsert {
 }
 
 export interface collectionDBInsert {
-  collectionName: string,
-  avgSpeed: number,
-  bestSpeed: number,
-  raceAmount: number,
-  userId: number
+  collectionname: string,
+  avgspeed: number,
+  bestspeed: number,
+  raceamount: number,
+  userid: number
 }
 
 export interface entryDBInsert {
   word: string,
   answer: string,
-  collectionId: number
+  collectionid: number
 }
