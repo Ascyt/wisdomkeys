@@ -1,7 +1,7 @@
 import {Collection} from "../models/model_collection";
 import {Unit} from "../database/unit";
 import {RepositoryBase} from "./repository_base";
-import {collectionDB} from "../models/model_db";
+import {collectionDB, collectionDBInsert} from "../models/model_db";
 import {Entry} from "../models/model_entry";
 import {EntryRepository} from "./repository_entry";
 
@@ -23,20 +23,20 @@ export class CollectionRepository extends RepositoryBase {
     return await this.executeStmt(stmt);
   }
 
-  public async insertCollection(coll: Collection): Promise<boolean> {
+  public async insertCollection(coll: collectionDBInsert): Promise<boolean> {
     const stmt = await this.unit.prepare('INSERT INTO wk_collection (collectionname, avgspeed, bestspeed, raceamount, userid) VALUES (?1, ?2, ?3, ?4, ?5)', {
-      1: coll.collectionName,
-      2: coll.avgSpeed,
-      3: coll.bestSpeed,
-      4: coll.raceAmount,
-      5: coll.userId
+      1: coll.collectionname,
+      2: coll.avgspeed,
+      3: coll.bestspeed,
+      4: coll.raceamount,
+      5: coll.userid
     });
 
     return await this.executeStmt(stmt);
   }
 
-  public async deleteCollection(coll: Collection): Promise<boolean> {
-    const stmt = await this.unit.prepare('DELETE FROM wk_collection WHERE collectionid = ?1', coll.collectionId);
+  public async deleteCollection(collId: number): Promise<boolean> {
+    const stmt = await this.unit.prepare('DELETE FROM wk_collection WHERE collectionid = ?1', collId);
 
     return await this.executeStmt(stmt);
   }
