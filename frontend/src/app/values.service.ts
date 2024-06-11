@@ -42,4 +42,8 @@ export class ValuesService {
     public removeEmptyValues(): void {
         this.selectedCollection.values = this.selectedCollection.values.filter(value => value.question !== "" || value.answer !== "");
     }
+
+    public getRandomValue(): Value {
+        return this.selectedCollection.values[Math.floor(Math.random() * this.selectedCollection.values.length)];
+    }
 }

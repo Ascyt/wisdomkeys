@@ -4,6 +4,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Collection, ValuesService } from '../values.service';
 import { FormsModule } from '@angular/forms';
 import { CollectionDropdownService } from './collection-dropdown-service';
+import { StatisticsService } from '../statistics.service';
 
 @Component({
   selector: 'app-collection-dropdown',

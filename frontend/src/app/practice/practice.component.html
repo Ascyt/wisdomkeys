@@ -1,1 +1,32 @@
-<p>practice works!</p>
+<div *ngIf="valuesService.selectedCollection.values.length >= 1">
+    <!-- Question view -->
+    <p>{{currentValue?.question}}</p>
+
+    <!-- Answer input field -->
+    <input type="text" class="form-control" [(ngModel)]="currentValueAnswer" placeholder="Answer" (keydown.enter)="onEnterKeydown()" (input)="onInputChange()" />
+
+    <!-- Reset button -->
+    <button type="button" class="btn m-2" (click)="nextValue()">
+    <i class="bi bi-arrow-clockwise"></i> Reset
+    </button>
+
+    <div class="d-flex flex-column align-items-center text-white">
+        <div class="mb-2">
+            <p class="mb-0">Avg. {{getAvgWpm()}} WPM</p>
+        </div>
+
+        <!-- Stopwatch -->
+        <div *ngIf="stopwatchRunning" class="mb-2">
+            <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-stop text-danger"></i>
+                <span class="ms-2">{{(getTime()) | date:'mm:ss:SS'}}</span>
+            </div>
+            <div>
+                <p class="mb-0">Approx. {{getDynamicWpm()}} WPM</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="valuesService.selectedCollection.values.length < 1">
+    <i>At least one item is needed in the current collection to practice.</i> 
+</div>

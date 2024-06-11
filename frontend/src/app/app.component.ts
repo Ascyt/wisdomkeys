@@ -5,6 +5,7 @@ import { ThemeSwitcherComponent } from './theme-switcher/theme-switcher.componen
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ThemeSwitcherService } from './theme-switcher/theme-switcher.service';
 import { CollectionDropdownComponent } from './collection-dropdown/collection-dropdown.component';
+import { BackendService } from './backend.service';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,7 @@ export class AppComponent {
   isCollapsed:boolean = false;
   private cycleRoutes:string[] = ['home','initialize','practice']
 
-  constructor(public router:Router, public themeSwitcher:ThemeSwitcherService) {
+  constructor(public router:Router, public themeSwitcher:ThemeSwitcherService, public backendService:BackendService) {
     this.updateTheme();
   }
 
