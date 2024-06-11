@@ -1,5 +1,10 @@
 import { Injectable } from "@angular/core";
 
+export interface Collection {
+    name: string;
+    values: Value[];
+}
+
 export interface Value { 
     question: string;
     answer: string;
@@ -10,13 +15,17 @@ export interface Value {
 })
 
 export class ValuesService {
-    public values: Value[] = [];
+    public collections: Collection[] = [];
+    public selectedCollectionIndex: number = 0;
+    public get selectedCollection(): Collection { 
+        return this.collections[this.selectedCollectionIndex]; 
+    }
 
     public getNewValue(): Value {
         return {question: "", answer:""};
     }
 
     public removeEmptyValues(): void {
-        this.values = this.values.filter(value => value.question !== "" || value.answer !== "");
+        this.selectedCollection.values = this.selectedCollection.values.filter(value => value.question !== "" || value.answer !== "");
     }
 }
