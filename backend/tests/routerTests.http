@@ -1,0 +1,45 @@
+### ------- User Tests -------
+
+### Insert User
+POST http://localhost:3000/api/users/
+Content-Type: application/json
+
+{
+  "username": "Schilip Fauer",
+  "password": "QgT"
+}
+
+### ------- Collection Tests -------
+
+### Get All Collections By UserID
+GET http://localhost:3000/api/collections/getAll/1
+
+### Get Collection By ID
+GET http://localhost:3000/api/collections/1
+
+### Insert Collection
+POST http://localhost:3000/api/collections/
+Content-Type: application/json
+
+{
+  "collectionname": "MyCollection",
+  "avgspeed": null,
+  "bestspeed": null,
+  "raceamount": 0,
+  "userid": 1
+}
+
+### Update Collection
+PUT http://localhost:3000/api/collections/2
+Content-Type: application/json
+
+{
+  "collectionname": "MyNewCollection",
+  "avgspeed": null,
+  "bestspeed": null,
+  "raceamount": 0,
+  "userid": 1
+}
+
+### Delete Collection
+DELETE http://localhost:3000/api/collections/3
