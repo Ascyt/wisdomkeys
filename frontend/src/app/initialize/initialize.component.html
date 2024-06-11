@@ -1,7 +1,7 @@
 <table class="table mb-0">
     <tbody>
-        <tr *ngFor="let value of valuesService.values; let i = index;">
-            <app-value-input #valueInput [value]="value" (focusPrevious)="focusElement(i - 1)" (focusNext)="focusElement(i + 1)" (greyedOutDisabled)="addValue()" [isGreyedOut]="i === this.valuesService.values.length - 1"></app-value-input>
+        <tr *ngFor="let value of valuesService.selectedCollection.values; let i = index;">
+            <app-value-input #valueInput [value]="value" (focusPrevious)="focusElement(i - 1)" (focusNext)="focusElement(i + 1)" (greyedOutDisabled)="addValue()" [isGreyedOut]="i === this.valuesService.selectedCollection.values.length - 1"></app-value-input>
         </tr>   
     </tbody>
 </table>

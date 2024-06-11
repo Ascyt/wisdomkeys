@@ -19,7 +19,14 @@
         </li>
       </ul>
     </div>
-    <div *ngIf="!isCollapsed">
+    <app-collection-dropdown class="m-2"></app-collection-dropdown>
+
+    <!--
+    <a *ngIf="!isCollapsed" class="navbar-brand" href="https://discord.gg/4hjTTmXewm" target="_blank">
+      <img class="logo d-inline-block align-text-top" src="https://8kt.ascyt.com/assets/images/discord-logo.png" alt="Discord Logo" />
+    </a>
+    -->
+    <div *ngIf="!isCollapsed" class="m-2">
       <app-theme-switcher (themeChanged)="toggleTheme()" />
     </div>
   </div>

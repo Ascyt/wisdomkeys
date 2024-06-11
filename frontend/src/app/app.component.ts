@@ -4,11 +4,12 @@ import { Router, RouterOutlet, RouterModule, RouterLinkActive } from '@angular/r
 import { ThemeSwitcherComponent } from './theme-switcher/theme-switcher.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ThemeSwitcherService } from './theme-switcher/theme-switcher.service';
+import { CollectionDropdownComponent } from './collection-dropdown/collection-dropdown.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, ThemeSwitcherComponent, RouterModule, RouterLinkActive, NgbModule],
+  imports: [CommonModule, RouterOutlet, ThemeSwitcherComponent, RouterModule, RouterLinkActive, NgbModule, CollectionDropdownComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

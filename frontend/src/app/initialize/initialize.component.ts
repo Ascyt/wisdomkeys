@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ValuesService, Value } from '../values.service';
 import { ValueInputComponent } from './value-input/value-input.component';
 import { NgbAlert, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CollectionDropdownService } from '../collection-dropdown/collection-dropdown-service';
 
 @Component({
   selector: 'app-initialize',
@@ -19,12 +20,12 @@ export class InitializeComponent {
 
   public get values(): Value[] {
     // exclude last
-    return this.valuesService.values.slice(0, -1);
+    return this.valuesService.selectedCollection.values.slice(0, -1);
   }
 
-  constructor(public valuesService: ValuesService) {
+  constructor(public valuesService: ValuesService, public collectionDropdownService: CollectionDropdownService) {
     this.valuesService.removeEmptyValues();
-    valuesService.values.push(valuesService.getNewValue());
+    valuesService.selectedCollection.values.push(valuesService.getNewValue());
   }
 
   public addValue(event:KeyboardEvent|undefined = undefined): void {
@@ -32,12 +33,16 @@ export class InitializeComponent {
       event.preventDefault();
     }
 
-    this.focusElement(this.valuesService.values.length - 1);
-    this.valuesService.values.push(this.valuesService.getNewValue());
+    this.focusElement(this.valuesService.selectedCollection.values.length - 1);
+    this.valuesService.selectedCollection.values.push(this.valuesService.getNewValue());
   }
   @HostListener('document:keydown.enter', ['$event']) 
   public addValueEnter(event:KeyboardEvent|undefined = undefined): void {
-    const input = this.valueInputs.toArray()[this.valuesService.values.length - 1];
+    if (this.collectionDropdownService.isEditingCollectionName) {
+      return;
+    }
+
+    const input = this.valueInputs.toArray()[this.valuesService.selectedCollection.values.length - 1];
     if (input !== undefined) {
       input.disableGreyedOut();
     }
@@ -48,10 +53,10 @@ export class InitializeComponent {
       event.preventDefault();
     }
 
-    if (this.valuesService.values.length <= 1) 
+    if (this.valuesService.selectedCollection.values.length <= 1) 
       return;
     
-    this.valuesService.values.splice(this.valuesService.values.length - 2, 1);
+    this.valuesService.selectedCollection.values.splice(this.valuesService.selectedCollection.values.length - 2, 1);
 
     this.focusLastElement();
   }
@@ -63,7 +68,7 @@ export class InitializeComponent {
 
   @HostListener('document:keydown.end', ['$event'])
   public focusLastElement(event:KeyboardEvent|undefined = undefined): void {
-    this.focusElement(this.valuesService.values.length - 2);
+    this.focusElement(this.valuesService.selectedCollection.values.length - 2);
   }
 
   public focusElement(index: number): void {
@@ -115,7 +120,7 @@ export class InitializeComponent {
       try {
         const values = JSON.parse(text);
         if (Array.isArray(values)) {
-          this.valuesService.values = values;
+          this.valuesService.selectedCollection.values = values;
         }
         else {
           console.error('Invalid JSON file');

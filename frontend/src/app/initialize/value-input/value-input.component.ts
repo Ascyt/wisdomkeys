@@ -21,7 +21,7 @@ export class ValueInputComponent {
   constructor(private valuesService: ValuesService) { }
 
   public onDelete(): void {
-    this.valuesService.values.splice(this.valuesService.values.indexOf(this.value), 1);
+    this.valuesService.selectedCollection.values.splice(this.valuesService.selectedCollection.values.indexOf(this.value), 1);
   }
 
   public focus(): void {
