@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { BackendService } from '../../backend.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterModule],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
 })
@@ -26,8 +26,8 @@ export class SignupComponent {
         this.router.navigate(['/']);
       })
       .catch((error) => {
-          this.error = 'Signup failed';
-          console.error('Signup failed', error);
+        this.error = error.error || 'Signup failed';
+        console.error('Signup failed', error);
       });
   }
 }

@@ -2,7 +2,6 @@ import { Component, HostListener, Injectable, Renderer2 } from '@angular/core';
 import { Value, ValuesService } from '../values.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { StatisticsService } from '../statistics.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -28,7 +27,7 @@ export class PracticeComponent {
 
   private onSelectedCollectionChangeSubscription:Subscription|undefined = undefined;
 
-  constructor(public valuesService: ValuesService, private renderer: Renderer2, public statistics:StatisticsService) {
+  constructor(public valuesService: ValuesService, private renderer: Renderer2) {
     this.valuesService.removeEmptyValues();
 
     if (valuesService.selectedCollection.values.length > 0) {
@@ -77,7 +76,7 @@ export class PracticeComponent {
   }
 
   public correctAnswer():void {
-    this.statistics.updateWpm(this.currentValueAnswer.length, this.getTime());
+    this.valuesService.updateWpm(this.currentValueAnswer.length, this.getTime());
 
     this.nextValue();
   }
@@ -148,18 +147,21 @@ export class PracticeComponent {
   }
 
   getDynamicWpm():string {
-    const wpm:number = this.statistics.getWpm(this.currentValueAnswer.length, this.getTime());
+    const wpm:number = this.valuesService.getWpm(this.currentValueAnswer.length, this.getTime());
     return wpm.toFixed(0);
   }
-  getAvgWpm():string {
-    return this.statistics.avgWpm.toFixed(0);
+  getAvgWpm():string|undefined {
+    return this.valuesService.selectedCollection.avgWpm?.toFixed(0);
   }
-  getBestWpm():string {
-    return this.statistics.bestWpm.toFixed(0);
+  getBestWpm():string|undefined {
+    return this.valuesService.selectedCollection.bestWpm?.toFixed(0);
+  }
+  getWordsCorrect():string|undefined {
+    return this.valuesService.selectedCollection.wordsCorrect?.toString();
   }
 
   resetHistory():void {
-    this.statistics.resetHistory();
+    this.valuesService.resetHistory();
   }
 
   @HostListener('document:keydown.control.h', ['$event'])

@@ -4,6 +4,9 @@ import { Subject } from "rxjs";
 export interface Collection {
     name: string;
     values: Value[];
+    wordsCorrect:number;
+    avgWpm:number|undefined;
+    bestWpm:number|undefined;
 }
 
 export interface Value { 
@@ -33,7 +36,13 @@ export class ValuesService {
     }
 
     public addCollection():Collection {
-        const newCollection:Collection = {name: `Collection ${this.collections.length + 1}`, values: [this.getNewValue()]};
+        const newCollection:Collection = {
+            name: `Collection ${this.collections.length + 1}`, 
+            values: [this.getNewValue()],
+            wordsCorrect: 0,
+            avgWpm: undefined,
+            bestWpm: undefined
+        };
         this.collections.push(newCollection);
         return newCollection;
     }
@@ -65,5 +74,34 @@ export class ValuesService {
             }
         }
         return true;
+    }
+
+    public getWpm(answerLength:number, elapsedTime:number):number {
+        // Assuming 5 characters per word
+        const words = answerLength / 5;
+        const minutes = elapsedTime / 60000;
+        return words / minutes;
+      }
+    
+    public updateWpm(answerLength:number, elapsedTime:number):void {
+        let wpm:number = this.getWpm(answerLength, elapsedTime);
+
+        if (this.selectedCollection.avgWpm === undefined) {
+            this.selectedCollection.avgWpm = 0;
+        }
+        if (this.selectedCollection.bestWpm === undefined) {
+            this.selectedCollection.bestWpm = 0;
+        }
+    
+        this.selectedCollection.avgWpm = (this.selectedCollection.avgWpm * this.selectedCollection.wordsCorrect + wpm) / (this.selectedCollection.wordsCorrect + 1);
+        this.selectedCollection.wordsCorrect++;
+        if (wpm > this.selectedCollection.bestWpm) {
+        this.selectedCollection.bestWpm = wpm;
+        }
+    }
+    
+    public resetHistory():void {
+        this.selectedCollection.wordsCorrect = 0;
+        this.selectedCollection.avgWpm = 0;
     }
 }
