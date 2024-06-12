@@ -66,6 +66,17 @@ userRouter.post('/register', async (req, res) => {
             password: bcrypt.hashSync(req.body.password, saltRounds)
         }
 
+        const userList = await userRepo.getAllUsers();
+        if(userList !== null) {
+            const userCheck = userList.find((u) => u.username === user.username);
+            if (userCheck !== undefined) {
+                await unit.complete(false);
+                res.status(StatusCodes.BAD_REQUEST).json("User already exists");
+
+                return;
+            }
+        }
+
         success = await userRepo.insertUser(user);
 
         if(success) {
