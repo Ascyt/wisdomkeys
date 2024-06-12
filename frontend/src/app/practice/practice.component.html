@@ -18,7 +18,13 @@
 
     <div class="d-flex flex-column align-items-center text-white">
         <div class="mb-2">
-            <p class="mb-0">Avg. {{getAvgWpm()}} WPM</p>
+            <p class="mb-0">Words: {{statistics.wordsCorrect}}</p>
+        </div>
+        <div class="mb-2">
+            <p class="mb-0">Avg.: {{getAvgWpm()}} WPM</p>
+        </div>
+        <div class="mb-2">
+            <p class="mb-0">Best: {{getBestWpm()}} WPM</p>
         </div>
 
         <!-- Stopwatch -->
@@ -36,11 +42,11 @@
     <!-- Space to submit -->
     <div class="custom-control custom-switch">
         <input type="checkbox" [disabled]="!valuesService.allowSpaceToSubmit()" class="custom-control-input" id="spaceToSubmitSwitch" [(ngModel)]="spaceToSubmit">
-        <label class="custom-control-label m-1" for="spaceToSubmitSwitch">Space to submit</label>
+        <label class="custom-control-label m-1" for="spaceToSubmitSwitch">Space To Submit</label>
     </div> 
 
     <!-- Info if not available-->
-    <p *ngIf="!valuesService.allowSpaceToSubmit()" class="text space-to-submit-info">Space to submit cannot be enabled when an answer contains a space character.</p>
+    <p *ngIf="!valuesService.allowSpaceToSubmit()" class="text space-to-submit-info">Space To Submit cannot be enabled when an answer contains a space character.</p>
 
     <!-- Reset history button -->
     <button type="button" class="btn btn-outline-danger m-2" (click)="resetHistory()">
@@ -57,4 +63,5 @@
     <li><span class="key">Enter</span>: <span class="description">Submit</span></li>
     <li><span class="key">Ctrl</span> + <span class="key">H</span>: <span class="description">Toggle view answer</span></li>
     <li><span class="key">Ctrl</span> + <span class="key">R</span>: <span class="description">Next value</span></li>
+    <li><span class="key">Ctrl</span> + <span class="key">Space</span>: <span class="description">Toggle Space To Submit</span></li>
 </ul>

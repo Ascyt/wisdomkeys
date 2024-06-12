@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 export class StatisticsService {
   public wordsCorrect:number = 0;
   public avgWpm:number = 0;
+  public bestWpm:number = 0;
 
   constructor() { }
 
@@ -17,8 +18,13 @@ export class StatisticsService {
   }
 
   public updateWpm(answerLength:number, elapsedTime:number):void {
-    this.avgWpm = (this.avgWpm * this.wordsCorrect + this.getWpm(answerLength, elapsedTime)) / (this.wordsCorrect + 1);
+    let wpm:number = this.getWpm(answerLength, elapsedTime);
+
+    this.avgWpm = (this.avgWpm * this.wordsCorrect + wpm) / (this.wordsCorrect + 1);
     this.wordsCorrect++;
+    if (wpm > this.bestWpm) {
+      this.bestWpm = wpm;
+    }
   }
 
   public resetHistory():void {

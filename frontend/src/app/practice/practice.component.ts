@@ -154,6 +154,9 @@ export class PracticeComponent {
   getAvgWpm():string {
     return this.statistics.avgWpm.toFixed(0);
   }
+  getBestWpm():string {
+    return this.statistics.bestWpm.toFixed(0);
+  }
 
   resetHistory():void {
     this.statistics.resetHistory();
@@ -168,5 +171,12 @@ export class PracticeComponent {
 
   toggleViewAnswer():void {
     this.isViewingAnswer = !this.isViewingAnswer;
+  }
+
+  @HostListener('document:keydown.control.space', ['$event'])
+  toggleSpaceToSubmitKey($event:KeyboardEvent):void {
+    $event.preventDefault();
+
+    this.spaceToSubmit = !this.spaceToSubmit;
   }
 }
