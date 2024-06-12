@@ -18,18 +18,18 @@ export class EntryRepository extends RepositoryBase {
     return await this.executeStmt(stmt);
   }
 
-  public async insertEntry(entry: Entry): Promise<boolean> {
+  public async insertEntry(entry: entryDBInsert): Promise<boolean> {
     const stmt = await this.unit.prepare('INSERT INTO wk_entry (word, answer, collectionid) VALUES (?1, ?2, ?3)', {
       1: entry.word,
       2: entry.answer,
-      3: entry.collectionId
+      3: entry.collectionid
     });
 
     return await this.executeStmt(stmt);
   }
 
-  public async deleteEntry(entry: Entry): Promise<boolean> {
-    const stmt = await this.unit.prepare('DELETE FROM wk_entry WHERE entryid = ?1', entry.entryId);
+  public async deleteEntries(collId: number): Promise<boolean> {
+    const stmt = await this.unit.prepare('DELETE FROM wk_entry WHERE collectionid = ?1', collId);
 
     return await this.executeStmt(stmt);
   }

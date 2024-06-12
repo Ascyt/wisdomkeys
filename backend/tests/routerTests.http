@@ -53,15 +53,29 @@ Content-Type: application/json
 }
 
 ### Update Collection
-PUT http://localhost:3000/api/collections/2
+PUT http://localhost:3000/api/collections/1
 Content-Type: application/json
 
 {
-  "collectionname": "MyNewCollection",
+  "collectionname": "BRANDNEWCollection",
   "avgspeed": null,
   "bestspeed": null,
   "wordamount": 0,
-  "userid": 1
+  "userid": 1,
+  "entries": [
+    {
+      "word": "asdasd",
+      "answer": "answerrrr"
+    },
+    {
+      "word": "2nd word",
+      "answer": "2nd answer"
+    },
+    {
+      "word": "WMC",
+      "answer": "lieblingsfach"
+    }
+  ]
 }
 
 ### Delete Collection
