@@ -65,7 +65,7 @@ collectionRouter.post('/', async (req, res) => {
       collectionname: req.body.collectionname,
       avgspeed: req.body.avgspeed,
       bestspeed: req.body.bestspeed,
-      raceamount: req.body.raceamount,
+      wordamount: req.body.wordamount,
       userid: req.body.userid
     }
 
@@ -104,7 +104,7 @@ collectionRouter.put('/:id', async (req, res) => {
       req.body.collectionname,
       req.body.avgspeed,
       req.body.bestspeed,
-      req.body.raceamount,
+      req.body.wordamount,
       req.body.userid,
       []
     );

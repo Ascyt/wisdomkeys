@@ -5,17 +5,17 @@ export class Collection {
   private _collectionName: string;
   private _avgSpeed: number | null;
   private _bestSpeed: number | null;
-  private _raceAmount: number;
+  private _wordamount: number;
   private readonly _userId: number;
   private _entries: Entry[];
 
 
-  constructor(collectionId: number, collectionName: string, avgSpeed: number | null, bestSpeed: number | null, raceAmount: number, userId: number, entries: Entry[]) {
+  constructor(collectionId: number, collectionName: string, avgSpeed: number | null, bestSpeed: number | null, wordamount: number, userId: number, entries: Entry[]) {
     this._collectionId = collectionId;
     this._collectionName = collectionName;
     this._avgSpeed = avgSpeed;
     this._bestSpeed = bestSpeed;
-    this._raceAmount = raceAmount;
+    this._wordamount = wordamount;
     this._userId = userId;
     this._entries = entries;
   }
@@ -37,8 +37,8 @@ export class Collection {
     return this._bestSpeed;
   }
 
-  get raceAmount(): number {
-    return this._raceAmount;
+  get wordamount(): number {
+    return this._wordamount;
   }
 
   get userId(): number {
@@ -62,8 +62,8 @@ export class Collection {
     this._bestSpeed = value;
   }
 
-  set raceAmount(value: number) {
-    this._raceAmount = value;
+  set wordamount(value: number) {
+    this._wordamount = value;
   }
 
   set entries(value: Entry[]) {
