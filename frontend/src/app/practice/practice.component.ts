@@ -3,6 +3,7 @@ import { Value, ValuesService } from '../values.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { BackendService } from '../backend.service';
 
 @Component({
   selector: 'app-practice',
@@ -27,7 +28,7 @@ export class PracticeComponent {
 
   private onSelectedCollectionChangeSubscription:Subscription|undefined = undefined;
 
-  constructor(public valuesService: ValuesService, private renderer: Renderer2) {
+  constructor(public valuesService: ValuesService, private renderer: Renderer2, private backendService:BackendService) {
     this.valuesService.removeEmptyValues();
 
     if (valuesService.selectedCollection.values.length > 0) {
@@ -76,7 +77,7 @@ export class PracticeComponent {
   }
 
   public correctAnswer():void {
-    this.valuesService.updateWpm(this.currentValueAnswer.length, this.getTime());
+    this.valuesService.updateWpm(this.currentValueAnswer.length, this.getTime(), this.backendService);
 
     this.nextValue();
   }
@@ -161,7 +162,7 @@ export class PracticeComponent {
   }
 
   resetHistory():void {
-    this.valuesService.resetHistory();
+    this.valuesService.resetHistory(this.backendService);
   }
 
   @HostListener('document:keydown.control.h', ['$event'])

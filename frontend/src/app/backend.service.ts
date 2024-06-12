@@ -1,7 +1,7 @@
 import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { Collection, ValuesService } from "./values.service";
+import { Collection, Value, ValuesService } from "./values.service";
 
 interface FormattedCollection {
     collectionname: string;
@@ -9,7 +9,7 @@ interface FormattedCollection {
     bestspeed: number|undefined;
     wordamount: number;
     userid: number;
-    values?: FormattedValue[];
+    entries?: FormattedValue[];
 }
 interface FormattedValue {
     word: string;
@@ -28,7 +28,7 @@ export class BackendService {
     public userId:number|null;
     public isLoggedIn:boolean = false;
 
-    constructor(private httpClient:HttpClient, private valueService:ValuesService) {
+    constructor(private httpClient:HttpClient, private valuesService:ValuesService) {
         this.username = localStorage.getItem('username');
         this.password = localStorage.getItem('password');
         this.userId = Number(localStorage.getItem('userId'));
@@ -53,7 +53,7 @@ export class BackendService {
                     localStorage.setItem('username', username);
                     localStorage.setItem('password', password);
 
-                    for (let collection of this.valueService.collections) {
+                    for (let collection of this.valuesService.collections) {
                         this.addCollection(collection);
                     }
 
@@ -83,7 +83,9 @@ export class BackendService {
                     localStorage.setItem('username', username);
                     localStorage.setItem('password', password);
 
-                    this.loadCollections();
+                    this.loadCollections()!.then(() => {
+                        this.valuesService.changeSelectedCollection(this.valuesService.collections[0]);
+                    });
 
                     resolve(response);
                 },
@@ -95,21 +97,34 @@ export class BackendService {
         });
     }
 
-    loadCollections(): Promise<any> {
+    loadCollections(): Promise<any>|void {
+        if (!this.isLoggedIn) {
+            return;
+        }
+
         return new Promise<any>((resolve, reject) => {
             this.httpClient.get<any>(this.apiUrl + "collections/getAll/" + this.userId).subscribe({
                 next: (response) => {
-                    console.log('Values loaded', response);
-                    for (let collection of response) {
+                    this.valuesService.collections = [];
+
+                    const collections:any[] = response;
+                    
+                    for (let i = 0; i < collections.length; i++) {
                         const frontendFormattedCollection:Collection = {
-                            name: collection.collectionname,
-                            values: [],
-                            wordsCorrect: collection.wordamount,
-                            avgWpm: collection.avgspeed,
-                            bestWpm: collection.bestspeed
+                            id: collections[i]._collectionId,
+                            name: collections[i]._collectionName,
+                            values: this.formatValuesFrontend(collections[i]._entries),
+                            wordsCorrect: collections[i]._wordamount,
+                            avgWpm: collections[i]._avgSpeed,
+                            bestWpm: collections[i]._bestSpeed
                         };
-                        this.valueService.collections.push(frontendFormattedCollection);
+
+                        frontendFormattedCollection.values.push(this.valuesService.getNewValue());
+
+                        this.valuesService.collections.push(frontendFormattedCollection);
+                        this.valuesService.changeSelectedCollection(frontendFormattedCollection);
                     }
+                    console.log('Collections loaded', this.valuesService.collections);
                     resolve(response);
                 },
                 error: (error) => {
@@ -119,27 +134,64 @@ export class BackendService {
             });
         });
     }
+    formatValuesFrontend(values:any[]): Value[] {
+        const formattedValues:Value[] = [];
+
+        for (let i = 0; i < values.length; i++) {
+            const formattedValue:Value = {
+                question: values[i]._word,
+                answer: values[i]._answer
+            };
+            formattedValues.push(formattedValue);
+        }
+
+        return formattedValues;
+    }
+    formatValues(values:Value[]):FormattedValue[] {
+        const formattedValues:FormattedValue[] = [];
+
+        for (let i = 0; i < values.length; i++) {
+            const formattedValue:FormattedValue = {
+                word: values[i].question,
+                answer: values[i].answer
+            };
+            formattedValues.push(formattedValue);
+        }
+
+        return formattedValues;
+    }
+
     formatCollection(collection:Collection):FormattedCollection {
+        // Remove the last value, which is always empty, to a new array to not modify the original.
+        const values = collection.values.slice(0, collection.values.length - 1);
+
         if (this.userId === null) {
             throw new Error('User ID not set');
         }
 
         return {
             "collectionname": collection.name,
-            "avgspeed": this.valueService.selectedCollection.avgWpm,
-            "bestspeed": this.valueService.selectedCollection.bestWpm,
-            "wordamount": this.valueService.selectedCollection.wordsCorrect,
+            "entries": this.formatValues(values),
+            "avgspeed": collection.avgWpm,
+            "bestspeed": collection.bestWpm,
+            "wordamount": collection.wordsCorrect,
             "userid": this.userId
         }
     }
 
-    addCollection(collection:Collection): Promise<any> {
+    addCollection(collection:Collection): Promise<any>|void {
+        if (!this.isLoggedIn)
+            return;
+
         const formattedCollection = this.formatCollection(collection);
 
         return new Promise<any>((resolve, reject) => {
-            this.httpClient.post<any>(this.apiUrl + "collections/" + this.userId, formattedCollection).subscribe({
+            this.httpClient.post<any>(this.apiUrl + "collections", formattedCollection).subscribe({
                 next: (response) => {
                     console.log('Collection added', response);
+
+                    this.loadCollections();
+
                     resolve(response);
                 },
                 error: (error) => {
@@ -149,17 +201,45 @@ export class BackendService {
             });
         });
     }
-    updateCollection(collection:Collection): Promise<any> {
+    updateCollection(collection:Collection): Promise<any>|void {
+        if (!this.isLoggedIn)
+            return;
+
         const formattedCollection = this.formatCollection(collection);
 
+        if (collection.id === undefined) {
+            throw new Error('Collection ID not set');
+        }
+
         return new Promise<any>((resolve, reject) => {
-            this.httpClient.put<any>(this.apiUrl + "collections/" + this.userId, formattedCollection).subscribe({
+            this.httpClient.put<any>(this.apiUrl + "collections/" + collection.id, formattedCollection).subscribe({
                 next: (response) => {
                     console.log('Collection updated', response);
                     resolve(response);
                 },
                 error: (error) => {
                     console.error('Collection updating failed', error);
+                    reject(error);
+                }
+            });
+        });
+    }
+    removeCollection(collection:Collection): Promise<any>|void {
+        if (!this.isLoggedIn)
+            return;
+
+        if (collection.id === undefined) {
+            throw new Error('Collection ID not set');
+        }
+
+        return new Promise<any>((resolve, reject) => {
+            this.httpClient.delete<any>(this.apiUrl + "collections/" + collection.id).subscribe({
+                next: (response) => {
+                    console.log('Collection removed', response);
+                    resolve(response);
+                },
+                error: (error) => {
+                    console.error('Collection removing failed', error);
                     reject(error);
                 }
             });
@@ -172,6 +252,9 @@ export class BackendService {
         this.password = null;
         localStorage.removeItem('username');
         localStorage.removeItem('password');
+
+        this.valuesService.collections = [];
+        this.valuesService.addEmptyCollection(this);
     }
 
     deleteAccount(): Promise<any> {

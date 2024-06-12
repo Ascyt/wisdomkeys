@@ -1,7 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
+import { BackendService } from "./backend.service";
 
 export interface Collection {
+    id?: number;
     name: string;
     values: Value[];
     wordsCorrect:number;
@@ -20,22 +22,30 @@ export interface Value {
 
 export class ValuesService {
     public collections: Collection[] = [];
-    public selectedCollection!: Collection;
+    public selectedCollectionId: number = -1;
+
+    public get selectedCollection():Collection {
+        return this.collections.find(c => c.id === this.selectedCollectionId) || this.collections[0];
+    }
 
     private onSelectedCollectionChangeSource = new Subject<void>();
 
     constructor() {
-        this.changeSelectedCollection(this.addCollection());
+        this.changeSelectedCollection(this.addEmptyCollection(undefined));
     }
 
     public onSelectedCollectionChange = this.onSelectedCollectionChangeSource.asObservable();
 
     public changeSelectedCollection(collection:Collection): void {
-        this.selectedCollection = collection;
+        if (collection.id === undefined) {
+            throw new Error("Collection must have an id");
+        }
+
+        this.selectedCollectionId = collection.id;
         this.onSelectedCollectionChangeSource.next();
     }
 
-    public addCollection():Collection {
+    public addEmptyCollection(backendService:BackendService|undefined):Collection {
         const newCollection:Collection = {
             name: `Collection ${this.collections.length + 1}`, 
             values: [this.getNewValue()],
@@ -43,15 +53,25 @@ export class ValuesService {
             avgWpm: undefined,
             bestWpm: undefined
         };
+
+        if (backendService === undefined || !backendService.isLoggedIn) {
+            newCollection.id = this.collections.length;
+        }
+        else {
+            backendService.addCollection(newCollection);
+        }
+
         this.collections.push(newCollection);
         return newCollection;
     }
 
-    public removeCollection(collection: Collection): void {
+    public removeCollection(collection: Collection, backendService:BackendService): void {
         this.collections = this.collections.filter(c => c !== collection);
-        if (this.selectedCollection === collection) {
-            this.selectedCollection = this.collections[0];
+        if (this.selectedCollectionId === collection.id) {
+            this.selectedCollectionId = this.collections[0].id!;
         }
+
+        backendService.removeCollection(collection);
     }
 
     public getNewValue(): Value {
@@ -83,7 +103,7 @@ export class ValuesService {
         return words / minutes;
       }
     
-    public updateWpm(answerLength:number, elapsedTime:number):void {
+    public updateWpm(answerLength:number, elapsedTime:number, backendService:BackendService):void {
         let wpm:number = this.getWpm(answerLength, elapsedTime);
 
         if (this.selectedCollection.avgWpm === undefined) {
@@ -98,10 +118,15 @@ export class ValuesService {
         if (wpm > this.selectedCollection.bestWpm) {
         this.selectedCollection.bestWpm = wpm;
         }
+
+        backendService.updateCollection(this.selectedCollection);
     }
     
-    public resetHistory():void {
+    public resetHistory(backendService:BackendService):void {
         this.selectedCollection.wordsCorrect = 0;
         this.selectedCollection.avgWpm = 0;
+        this.selectedCollection.bestWpm = 0;
+
+        backendService.updateCollection(this.selectedCollection);
     }
 }

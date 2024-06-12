@@ -2,12 +2,12 @@
     <div class="row">
         <div class="col">
             <input type="text" #valueInput class="form-control align-middle" [(ngModel)]="value.question" [placeholder]="isGreyedOut ? 'New Item' : 'Question'" 
-            (keydown.arrowup)="focusPreviousElement()" (keydown.arrowdown)="focusNextElement()" (keydown.backspace)="deleteIfEmpty($event)" (keydown.control.backspace)="deleteIfEmpty($event)" (input)="disableGreyedOut()" />
+            (keydown.arrowup)="focusPreviousElement()" (keydown.arrowdown)="focusNextElement()" (keydown.backspace)="deleteIfEmpty($event)" (keydown.control.backspace)="deleteIfEmpty($event)" (input)="disableGreyedOut()" (blur)="onOutOfFocus()" />
         </div>
 
         <div class="col" *ngIf="!isGreyedOut">
             <input type="text" #valueInputAnswer class="form-control align-middle" [(ngModel)]="value.answer" placeholder="Answer" 
-            (keydown.arrowup)="focusPreviousElement()" (keydown.arrowdown)="focusNextElement()"/>
+            (keydown.arrowup)="focusPreviousElement()" (keydown.arrowdown)="focusNextElement()" (blur)="onOutOfFocus()"/>
         </div>
     </div>
 </td>

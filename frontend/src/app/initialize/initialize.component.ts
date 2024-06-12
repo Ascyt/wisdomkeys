@@ -4,6 +4,7 @@ import { ValuesService, Value } from '../values.service';
 import { ValueInputComponent } from './value-input/value-input.component';
 import { NgbAlert, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CollectionDropdownService } from '../collection-dropdown/collection-dropdown-service';
+import { BackendService } from '../backend.service';
 
 @Component({
   selector: 'app-initialize',
@@ -23,7 +24,7 @@ export class InitializeComponent {
     return this.valuesService.selectedCollection.values.slice(0, -1);
   }
 
-  constructor(public valuesService: ValuesService, public collectionDropdownService: CollectionDropdownService) {
+  constructor(public valuesService: ValuesService, public collectionDropdownService: CollectionDropdownService, private backendService:BackendService) {
     this.valuesService.removeEmptyValues();
     valuesService.selectedCollection.values.push(valuesService.getNewValue());
   }
@@ -122,6 +123,8 @@ export class InitializeComponent {
         if (Array.isArray(values)) {
           this.valuesService.selectedCollection.values = values;
           this.valuesService.selectedCollection.values.push(this.valuesService.getNewValue());
+
+          this.backendService.updateCollection(this.valuesService.selectedCollection);
         }
         else {
           console.error('Invalid JSON file');
