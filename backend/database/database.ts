@@ -44,7 +44,7 @@ export class DB {
             collectionname text NOT NULL,
             avgspeed real,
             bestspeed real,
-            raceAmount integer NOT NULL,
+            wordamount integer NOT NULL,
             userid integer NOT NULL,
             CONSTRAINT fk_collection_user FOREIGN KEY (userid) REFERENCES "wk_user" (userid) ON DELETE CASCADE
             ) STRICT`

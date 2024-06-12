@@ -11,11 +11,11 @@ export class CollectionRepository extends RepositoryBase {
   }
 
   public async updateCollection(coll: Collection): Promise<boolean> {
-    const stmt = await this.unit.prepare('UPDATE wk_collection SET collectionname = ?1, avgspeed = ?2, bestspeed = ?3, raceamount = ?4, userid = ?5 WHERE collectionid = ?6', {
+    const stmt = await this.unit.prepare('UPDATE wk_collection SET collectionname = ?1, avgspeed = ?2, bestspeed = ?3, wordamount = ?4, userid = ?5 WHERE collectionid = ?6', {
       1: coll.collectionName,
       2: coll.avgSpeed,
       3: coll.bestSpeed,
-      4: coll.raceAmount,
+      4: coll.wordamount,
       5: coll.userId,
       6: coll.collectionId
     });
@@ -24,11 +24,11 @@ export class CollectionRepository extends RepositoryBase {
   }
 
   public async insertCollection(coll: collectionDBInsert): Promise<boolean> {
-    const stmt = await this.unit.prepare('INSERT INTO wk_collection (collectionname, avgspeed, bestspeed, raceamount, userid) VALUES (?1, ?2, ?3, ?4, ?5)', {
+    const stmt = await this.unit.prepare('INSERT INTO wk_collection (collectionname, avgspeed, bestspeed, wordamount, userid) VALUES (?1, ?2, ?3, ?4, ?5)', {
       1: coll.collectionname,
       2: coll.avgspeed,
       3: coll.bestspeed,
-      4: coll.raceamount,
+      4: coll.wordamount,
       5: coll.userid
     });
 
@@ -43,7 +43,7 @@ export class CollectionRepository extends RepositoryBase {
 
   public async getCollectionById(collId: number): Promise<Collection | null> {
     const entryRepository = new EntryRepository(this.unit);
-    const stmt = await this.unit.prepare('SELECT collectionid, collectionname, avgspeed, bestspeed, raceamount, userid FROM wk_collection WHERE collectionid = ?1', collId);
+    const stmt = await this.unit.prepare('SELECT collectionid, collectionname, avgspeed, bestspeed, wordamount, userid FROM wk_collection WHERE collectionid = ?1', collId);
 
     const collection: collectionDB | null = RepositoryBase.nullIfUndefined(await stmt.get<collectionDB>());
 
@@ -56,11 +56,11 @@ export class CollectionRepository extends RepositoryBase {
       entries = [];
     }
 
-    return new Collection(collection.collectionid, collection.collectionname, collection.avgspeed, collection.bestspeed, collection.raceamount, collection.userid, entries);
+    return new Collection(collection.collectionid, collection.collectionname, collection.avgspeed, collection.bestspeed, collection.wordamount, collection.userid, entries);
   }
 
   public async getCollectionsByUserId(userId: number): Promise<Collection[] | null> {
-    const stmt = await this.unit.prepare('SELECT collectionid, collectionname, avgspeed, bestspeed, raceamount, userid FROM wk_collection WHERE userid = ?1', userId);
+    const stmt = await this.unit.prepare('SELECT collectionid, collectionname, avgspeed, bestspeed, wordamount, userid FROM wk_collection WHERE userid = ?1', userId);
 
     const collsTemp: collectionDB[] | null = RepositoryBase.nullIfUndefined(await stmt.all<collectionDB[]>());
 
@@ -82,7 +82,7 @@ export class CollectionRepository extends RepositoryBase {
         collsTemp[i].collectionname,
         collsTemp[i].avgspeed,
         collsTemp[i].bestspeed,
-        collsTemp[i].raceamount,
+        collsTemp[i].wordamount,
         collsTemp[i].userid,
         entries
       ));
