@@ -33,7 +33,7 @@ export class DB {
     await connection.run(
       `CREATE TABLE IF NOT EXISTS "wk_user" (
             userid integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-            username text NOT NULL,
+            username text NOT NULL UNIQUE,
             password text NOT NULL
             ) STRICT`
     );

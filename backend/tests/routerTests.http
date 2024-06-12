@@ -9,7 +9,7 @@ POST http://localhost:3000/api/users/register
 Content-Type: application/json
 
 {
-  "username": "Schilip Fauer",
+  "username": "Schilip Fauer Der Zweite",
   "password": "QgT"
 }
 
