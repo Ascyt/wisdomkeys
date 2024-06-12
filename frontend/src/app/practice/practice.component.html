@@ -1,4 +1,4 @@
-<div *ngIf="valuesService.selectedCollection.values.length >= 1">
+<div *ngIf="valuesService.selectedCollection.values.length > 1">
     <!-- Question view -->
     <p>{{currentValue?.question}}</p>
 
@@ -21,10 +21,10 @@
             <p class="mb-0">Words: {{getWordsCorrect()}}</p>
         </div>
         <div class="mb-2">
-            <p class="mb-0">Avg.: {{getAvgWpm()}} WPM</p>
+            <p class="mb-0">Avg.: {{getAvgWpm() ?? '--'}} WPM</p>
         </div>
         <div class="mb-2">
-            <p class="mb-0">Best: {{getBestWpm()}} WPM</p>
+            <p class="mb-0">Best: {{getBestWpm() ?? '--'}} WPM</p>
         </div>
 
         <!-- Stopwatch -->
@@ -53,7 +53,7 @@
         <i class="bi bi-arrow-clockwise"></i> Reset history
     </button>
 </div>
-<div *ngIf="valuesService.selectedCollection.values.length < 1">
+<div *ngIf="valuesService.selectedCollection.values.length <= 1">
     <i>At least one item is needed in the current collection to practice.</i> 
 </div>
 

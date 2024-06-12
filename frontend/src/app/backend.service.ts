@@ -247,14 +247,8 @@ export class BackendService {
     }
 
     logout(): void {
-        this.isLoggedIn = false;
-        this.username = null;
-        this.password = null;
         localStorage.removeItem('username');
         localStorage.removeItem('password');
-
-        this.valuesService.collections = [];
-        this.valuesService.addEmptyCollection(this);
     }
 
     deleteAccount(): Promise<any> {

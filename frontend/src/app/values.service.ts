@@ -78,12 +78,11 @@ export class ValuesService {
         return {question: "", answer:""};
     }
 
-    public removeEmptyValues(): void {
-        this.selectedCollection.values = this.selectedCollection.values.filter(value => value.question !== "" || value.answer !== "");
-    }
-
     public getRandomValue(): Value {
-        return this.selectedCollection.values[Math.floor(Math.random() * this.selectedCollection.values.length)];
+        const value = this.selectedCollection.values[Math.floor(Math.random() * (this.selectedCollection.values.length - 1))];
+        console.log(value);
+        console.log(this.selectedCollection.values)
+        return value;
     }
 
     public allowSpaceToSubmit(): boolean {

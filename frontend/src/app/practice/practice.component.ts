@@ -29,8 +29,6 @@ export class PracticeComponent {
   private onSelectedCollectionChangeSubscription:Subscription|undefined = undefined;
 
   constructor(public valuesService: ValuesService, private renderer: Renderer2, private backendService:BackendService) {
-    this.valuesService.removeEmptyValues();
-
     if (valuesService.selectedCollection.values.length > 0) {
       this.nextValue();
     }

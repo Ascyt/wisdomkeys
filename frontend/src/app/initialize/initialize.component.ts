@@ -25,8 +25,6 @@ export class InitializeComponent {
   }
 
   constructor(public valuesService: ValuesService, public collectionDropdownService: CollectionDropdownService, private backendService:BackendService) {
-    this.valuesService.removeEmptyValues();
-    valuesService.selectedCollection.values.push(valuesService.getNewValue());
   }
 
   public addValue(event:KeyboardEvent|undefined = undefined): void {
