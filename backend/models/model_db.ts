@@ -9,7 +9,7 @@ export interface collectionDB {
   collectionname: string,
   avgspeed: number | null,
   bestspeed: number | null,
-  raceamount: number,
+  wordamount: number,
   userid: number
 }
 
@@ -30,7 +30,7 @@ export interface collectionDBInsert {
   collectionname: string,
   avgspeed: number | null,
   bestspeed: number | null,
-  raceamount: number,
+  wordamount: number,
   userid: number
 }
 
