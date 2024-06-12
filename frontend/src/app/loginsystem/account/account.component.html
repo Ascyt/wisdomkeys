@@ -1,1 +1,11 @@
-<p>account works!</p>
+<h2>Account</h2>
+
+<p>Username: <span class="text-italic text-bold">{{backendService.username}}</span></p>
+
+<button type="button" class="btn btn-outline-danger m-2" (click)="logout()">
+    <i class="bi bi-box-arrow-right"></i> Logout
+</button>
+
+<button type="button" class="btn btn-danger m-2" (click)="deleteAccount()">
+    <i class="bi bi-trash"></i> Delete account
+</button>
