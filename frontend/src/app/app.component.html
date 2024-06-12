@@ -1,10 +1,10 @@
 <nav class="navbar navbar-expand-md">
   <div class="container-fluid">
     <div style="margin-left: 0.5rem">
-      <a *ngIf="backendService.isLoggedIn" class="navbar-brand" href="/account">
+      <a *ngIf="backendService.isLoggedIn" class="navbar-brand" routerLink="/account">
         <img class="logo d-inline-block align-text-top" src="assets/images/user.png" alt="Logged in" />
       </a>
-      <a *ngIf="!backendService.isLoggedIn" class="navbar-brand" href="/login">
+      <a *ngIf="!backendService.isLoggedIn" class="navbar-brand" routerLink="/login">
         <img class="logo d-inline-block align-text-top" src="assets/images/nouser.png" alt="Not logged in" />
       </a>
     </div>

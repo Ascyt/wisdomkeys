@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { Subject } from "rxjs";
 
 export interface Collection {
     name: string;
@@ -16,16 +17,25 @@ export interface Value {
 
 export class ValuesService {
     public collections: Collection[] = [];
-    public selectedCollection: Collection;
+    public selectedCollection!: Collection;
+
+    private onSelectedCollectionChangeSource = new Subject<void>();
 
     constructor() {
-        this.addCollection();
-        this.selectedCollection = this.collections[0];
+        this.changeSelectedCollection(this.addCollection());
     }
 
-    public addCollection(): void {
-        this.collections.push({name: `Collection ${this.collections.length + 1}`, values: [this.getNewValue()]});
-        this.selectedCollection = this.collections[this.collections.length - 1];
+    public onSelectedCollectionChange = this.onSelectedCollectionChangeSource.asObservable();
+
+    public changeSelectedCollection(collection:Collection): void {
+        this.selectedCollection = collection;
+        this.onSelectedCollectionChangeSource.next();
+    }
+
+    public addCollection():Collection {
+        const newCollection:Collection = {name: `Collection ${this.collections.length + 1}`, values: [this.getNewValue()]};
+        this.collections.push(newCollection);
+        return newCollection;
     }
 
     public removeCollection(collection: Collection): void {
@@ -45,5 +55,15 @@ export class ValuesService {
 
     public getRandomValue(): Value {
         return this.selectedCollection.values[Math.floor(Math.random() * this.selectedCollection.values.length)];
+    }
+
+    public allowSpaceToSubmit(): boolean {
+        // No answers can contain spaces
+        for (const value of this.selectedCollection.values) {
+            if (value.answer.includes(" ")) {
+                return false;
+            }
+        }
+        return true;
     }
 }

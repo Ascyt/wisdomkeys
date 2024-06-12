@@ -259,8 +259,23 @@ input[type="file"] {
     10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
     20%, 40%, 60%, 80% { transform: translateX(10px); }
     100% { transform: translateX(0); }
-  }
-  
-  .shake {
+}
+
+.shake {
     animation: shake-animation 0.5s infinite;
-  }
+}
+
+
+.non-selectable {
+    user-select: none; /* Standard syntax */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+}
+
+.text-italic {
+    font-style: italic;
+}
+.text-bold {
+    font-weight: bold;
+}

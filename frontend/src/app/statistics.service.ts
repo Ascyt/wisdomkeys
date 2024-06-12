@@ -18,5 +18,11 @@ export class StatisticsService {
 
   public updateWpm(answerLength:number, elapsedTime:number):void {
     this.avgWpm = (this.avgWpm * this.wordsCorrect + this.getWpm(answerLength, elapsedTime)) / (this.wordsCorrect + 1);
+    this.wordsCorrect++;
+  }
+
+  public resetHistory():void {
+    this.wordsCorrect = 0;
+    this.avgWpm = 0;
   }
 }

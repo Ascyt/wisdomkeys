@@ -121,6 +121,7 @@ export class InitializeComponent {
         const values = JSON.parse(text);
         if (Array.isArray(values)) {
           this.valuesService.selectedCollection.values = values;
+          this.valuesService.selectedCollection.values.push(this.valuesService.getNewValue());
         }
         else {
           console.error('Invalid JSON file');

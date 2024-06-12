@@ -1,8 +1,9 @@
-import { Component, HostListener, Renderer2 } from '@angular/core';
+import { Component, HostListener, Injectable, Renderer2 } from '@angular/core';
 import { Value, ValuesService } from '../values.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { StatisticsService } from '../statistics.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-practice',
@@ -11,15 +12,21 @@ import { StatisticsService } from '../statistics.service';
   templateUrl: './practice.component.html',
   styleUrl: './practice.component.scss'
 })
+
 export class PracticeComponent {
   public currentValue:Value|undefined = undefined;
   public currentValueAnswer:string = '';
+
+  public isViewingAnswer:boolean = false;
+
+  public spaceToSubmit:boolean = false;
 
   public stopwatchRunning:boolean = false;
   private elapsedTime: number = 0;
   private startTime: number = 0;
   private animationFrameId: any;
 
+  private onSelectedCollectionChangeSubscription:Subscription|undefined = undefined;
 
   constructor(public valuesService: ValuesService, private renderer: Renderer2, public statistics:StatisticsService) {
     this.valuesService.removeEmptyValues();
@@ -31,10 +38,30 @@ export class PracticeComponent {
     //this.startStopwatch();
   }
 
+  ngOnInit() {
+    this.onSelectedCollectionChangeSubscription = this.valuesService.onSelectedCollectionChange.subscribe(() => {
+      this.nextValue();
+    });
+  }
+  ngOnDestroy() {
+    this.onSelectedCollectionChangeSubscription?.unsubscribe();
+  }
+
+  public get actualSpaceToSubmit():boolean {
+    return this.spaceToSubmit && this.valuesService.allowSpaceToSubmit();
+  }
+
   public nextValue():void {
     this.currentValue = this.valuesService.getRandomValue();
     
     this.reset();
+  }
+  
+  @HostListener('document:keydown.control.r', ['$event'])
+  nextValueKey($event:KeyboardEvent):void {
+    $event.preventDefault();
+
+    this.nextValue();
   }
 
   public submitAnswer():void {
@@ -56,7 +83,7 @@ export class PracticeComponent {
   }
 
   public incorrectAnswer():void {
-    this.reset();
+    this.reset(false);
 
     this.renderer.addClass(document.body, 'shake');
     setTimeout(() => {
@@ -64,9 +91,11 @@ export class PracticeComponent {
     }, 500);
   }
 
-  public reset():void {
+  public reset(resetIsViewingAnswer=true):void {
     this.stopStopwatch();
     this.currentValueAnswer = '';
+    if (resetIsViewingAnswer)
+      this.isViewingAnswer = false;
   }
 
   @HostListener('document:keydown.enter') 
@@ -77,6 +106,16 @@ export class PracticeComponent {
   public onInputChange():void {
     if (!this.stopwatchRunning) {
       this.startStopwatch();
+    }
+
+    if (this.currentValueAnswer === '') {
+      this.reset(false);
+      return;
+    }
+
+    if (this.currentValueAnswer.endsWith(' ') && this.actualSpaceToSubmit) {
+      this.currentValueAnswer = this.currentValueAnswer.trimEnd();
+      this.submitAnswer();
     }
   }
 
@@ -114,5 +153,20 @@ export class PracticeComponent {
   }
   getAvgWpm():string {
     return this.statistics.avgWpm.toFixed(0);
+  }
+
+  resetHistory():void {
+    this.statistics.resetHistory();
+  }
+
+  @HostListener('document:keydown.control.h', ['$event'])
+  toggleViewAnswerKey($event:KeyboardEvent):void {
+    $event.preventDefault();
+
+    this.toggleViewAnswer();
+  }
+
+  toggleViewAnswer():void {
+    this.isViewingAnswer = !this.isViewingAnswer;
   }
 }
