@@ -1,4 +1,5 @@
 import {Entry} from "./model_entry";
+import {entryDBInsert} from "./model_db";
 
 export class Collection {
   private readonly _collectionId: number;
