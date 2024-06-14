@@ -25,6 +25,9 @@ export class LoginComponent {
     this.backendService.login(this.username, this.password)
       .then((response) => {
         this.router.navigate(['/']);
+        setTimeout(() => {
+          window.location.reload();
+        });
       })
       .catch((error) => {
           this.error = error.error || 'Login failed';

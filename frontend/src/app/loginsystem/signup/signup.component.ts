@@ -24,6 +24,9 @@ export class SignupComponent {
     this.backendService.signup(this.username, this.password)
       .then((response) => {
         this.router.navigate(['/']);
+        setTimeout(() => {
+          window.location.reload();
+        });
       })
       .catch((error) => {
         this.error = error.error || 'Signup failed';
